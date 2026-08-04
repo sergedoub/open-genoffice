@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    // Pin resolution to this repo's workspace sources (avoids stale types when node_modules links point elsewhere)
+    "baseUrl": ".",
+    "paths": {
+      "@genoffice/pptx-engine": ["../pptx-engine/src/index.ts"],
+      "@genoffice/pptx-engine/table-grid": ["../pptx-engine/src/table-grid.ts"]
+    }
+  },
+  "include": ["src", "tests"]
+}

@@ -1,0 +1,92 @@
+name: CI
+
+# Test gate for every PR and push: changed-file formatting, lint, typecheck across
+# all workspaces, and the full unit-test suite (engine packages and app tests; the
+# sheets suite also runs the Rust xlsx-sidecar tests). Installers are built and
+# published manually for now; this workflow does not build release artifacts.
+
+on:
+  push:
+    branches: [main, 'dev_*', 'release_*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Setup Rust
+        # SHA-pinned (third-party action); the ref no longer selects the
+        # toolchain, so it is passed explicitly.
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable branch, 2026-07
+        with:
+          toolchain: stable
+
+      - name: Cache cargo (xlsx-sidecar)
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          workspaces: apps/sheets/native/xlsx-engine
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check dependency licenses
+        run: npm run licenses
+
+      - name: Check Rust dependency licenses (xlsx-sidecar)
+        uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+        with:
+          command: check licenses
+          manifest-path: apps/sheets/native/xlsx-engine/Cargo.toml
+
+      - name: Check formatting
+        env:
+          FORMAT_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        # For PRs the checkout is the PR merge commit, so its first parent is the
+        # exact main revision the merge was built against. The event's base.sha can
+        # lag behind a fast-moving main, which pulls unrelated main-side files into
+        # the changed-file set and fails the check on files the PR never touched.
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            FORMAT_BASE_REF=$(git rev-parse HEAD^1)
+          fi
+          npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Regenerate test fixtures
+        run: npm run fixtures
+
+      # Generation is byte-deterministic (zip entry mtimes are pinned in
+      # tests/helpers/build-docx.ts); a diff here means the generator and the
+      # committed fixtures have drifted apart.
+      - name: Check committed fixtures match the generator
+        run: git diff --exit-code -- fixtures/generated
+
+      - name: Test
+        run: npm test

@@ -1,0 +1,4 @@
+# License-related files need a maintainer review.
+/LICENSE @sergedoub
+/NOTICE @sergedoub
+/.github/CODEOWNERS @sergedoub

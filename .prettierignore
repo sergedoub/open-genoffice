@@ -1,0 +1,15 @@
+node_modules/
+dist/
+out/
+release/
+.build/
+target/
+coverage/
+
+# Generated artifacts and dependency-managed metadata.
+package-lock.json
+apps/*/build/
+apps/shell/build/THIRD-PARTY-NOTICES.txt
+
+# Local-only acceptance drivers are intentionally outside CI.
+scripts/drivers/driver.*.mjs

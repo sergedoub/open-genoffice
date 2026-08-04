@@ -1,0 +1,2221 @@
+:root {
+  --accent: #c43e1c;
+  --accent-dark: #a33517;
+  --accent-soft: #fbeae5;
+  --surface: #ffffff;
+  --chrome-bg: #ffffff;
+  --border: #e1dfdd;
+  --border-strong: #c8c6c4;
+  --text: #252423;
+  --text-dim: #605e5c;
+  --hover: #f3f2f1;
+  --pressed: #edebe9;
+  --active-bg: #fbeae5;
+  --canvas: #e6e6e6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    'Segoe UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--chrome-bg);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.pdf-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* ================= ribbon (aligned with docs/slides chrome) ================= */
+
+.ribbon {
+  flex-shrink: 0;
+  background: var(--chrome-bg);
+  border-bottom: 1px solid var(--border-strong);
+  user-select: none;
+}
+
+.ribbon-tabs {
+  display: flex;
+  align-items: center;
+  /* Same 35px total row as the slides menu row (5px top padding + 30px tab line),
+     so the ribbon bottom divider lands on the same y across tabs */
+  padding: 5px 12px 0;
+  min-height: 35px;
+  gap: 4px;
+}
+
+.ribbon-file {
+  max-width: 50%;
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ribbon-tabs-spacer {
+  flex: 1;
+}
+
+.qa-btn {
+  width: 30px;
+  height: 28px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.qa-btn svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.qa-btn:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.qa-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.ribbon-body {
+  display: flex;
+  align-items: stretch;
+  /* band metrics shared with the docs/slides ribbons (PowerPoint parity) */
+  padding: 6px 12px;
+  /* HARD-fixed height like docs/slides: the ribbon height stays constant, and a
+     narrow window scrolls the row inside the ribbon (invisible scrollbar) instead
+     of squeezing the band */
+  height: 80px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.ribbon-body::-webkit-scrollbar {
+  display: none;
+}
+
+.ribbon-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+
+.ribbon-group-items {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.ribbon-sep {
+  width: 1px;
+  flex-shrink: 0;
+  background: var(--border);
+  margin: 8px 6px;
+}
+
+.rb-big {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  /* PowerPoint-density: minimal side padding (docs/slides ribbon parity) */
+  padding: 4px 7px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.rb-big-icon {
+  min-height: 28px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b3a39;
+}
+
+.rb-big:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.rb-big:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.rb-big.active {
+  background: var(--active-bg);
+  color: var(--accent);
+}
+
+/* AI button: brand logo only — no accent plate behind the icon, label stays black (same as docs) */
+.rb-big.rb-ai {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.rb-big.rb-ai > span:not(.rb-big-icon) {
+  margin-top: -1px;
+}
+
+.rb-big.rb-ai.active,
+.rb-big.rb-ai:hover:not(:disabled) {
+  background: none;
+  color: var(--color-text-primary);
+}
+
+.rb-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rb-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rb-small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  background: none;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.rb-small:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.rb-icon {
+  min-width: 27px;
+  height: 26px;
+  border: none;
+  background: none;
+  border-radius: 3px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+  padding: 0 5px;
+}
+
+.rb-icon:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.tb-page-input {
+  width: 40px;
+  height: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.tb-page-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.tb-page-total {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin: 0 4px;
+  white-space: nowrap;
+}
+
+.tb-zoom {
+  min-width: 42px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.tb-save-error {
+  color: #c0392b;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.tb-save-ok {
+  color: #217346;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.tb-save-pending {
+  color: var(--text-dim, #6b6b6b);
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+/* ── Thumbnail context menu ── */
+
+.thumb-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 170px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  padding: 5px;
+}
+
+.thumb-menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.thumb-menu button:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.thumb-menu button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Markup floating bar for selected text ── */
+
+.pdf-sel-popup {
+  position: fixed;
+  z-index: 30;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+.pdf-sel-popup button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  border: none;
+  background: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pdf-sel-popup button:hover {
+  background: var(--hover);
+}
+
+.sel-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.sel-swatch-hl {
+  background: #ffde59;
+}
+
+.sel-swatch-ul {
+  color: #2b66ff;
+  text-decoration: underline;
+}
+
+.sel-swatch-st {
+  color: #db3830;
+  text-decoration: line-through;
+}
+
+/* ── Unsaved markup overlay ── */
+
+.pdf-markup {
+  position: absolute;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.pdf-markup-highlight {
+  mix-blend-mode: multiply;
+}
+
+.pdf-markup-strikeout {
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: 0 46%;
+}
+
+.pdf-markup:hover {
+  outline: 1px dashed rgb(0 0 0 / 35%);
+}
+
+/* ── Annotation selection (click selects; deletion via the popup or Delete key) ── */
+
+.pdf-markup-selected,
+.pdf-markup-selected:hover,
+.pdf-stamp-selected,
+.pdf-stamp-selected:hover,
+.pdf-note-pin-selected {
+  outline: 2px solid #2b66ff;
+  outline-offset: 1px;
+}
+
+.pdf-draw-selected {
+  filter: drop-shadow(0 0 3px rgb(43 102 255 / 90%));
+}
+
+.pdf-del-popup {
+  position: fixed;
+  z-index: 30;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+.pdf-del-popup button {
+  border: none;
+  background: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #db3830;
+  cursor: pointer;
+}
+
+.pdf-del-popup button:hover {
+  background: var(--hover);
+}
+
+/* ── Transient toast (deleted annotation + undo) ── */
+
+.pdf-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: rgb(32 33 36 / 92%);
+  color: #fff;
+  font-size: 13px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+}
+
+.pdf-toast button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #8ab4f8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pdf-toast button:hover {
+  text-decoration: underline;
+}
+
+/* ── AcroForm form overlay ── */
+
+.pdf-form-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.pdf-form-input {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid rgb(60 120 216 / 55%);
+  background: rgb(235 243 255 / 55%);
+  border-radius: 2px;
+  padding: 0 3px;
+  font-family: inherit;
+  color: #222;
+  resize: none;
+}
+
+.pdf-form-input:focus {
+  outline: none;
+  border-color: #2b66ff;
+  background: #fff;
+}
+
+.pdf-form-checkbox {
+  position: absolute;
+  margin: 0;
+  accent-color: #2b66ff;
+}
+
+.pdf-form-select {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid rgb(60 120 216 / 55%);
+  background: rgb(235 243 255 / 55%);
+  border-radius: 2px;
+  padding: 0 2px;
+  font-family: inherit;
+  color: #222;
+}
+
+.pdf-form-select:focus {
+  outline: none;
+  border-color: #2b66ff;
+  background: #fff;
+}
+
+/* ================= Body: thumbnail sidebar + page scroll area ================= */
+
+.pdf-body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  background: var(--canvas);
+}
+
+.pdf-thumbs {
+  width: 150px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 10px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  user-select: none;
+}
+
+.pdf-thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+.pdf-thumb-box {
+  width: 112px;
+  background: #fff;
+  border: 2px solid var(--border-strong);
+  border-radius: 4px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.pdf-thumb-box canvas {
+  display: block;
+}
+
+.pdf-thumb:hover .pdf-thumb-box {
+  border-color: #a8a6a4;
+}
+
+.pdf-thumb-active .pdf-thumb-box {
+  border-color: var(--accent);
+}
+
+.pdf-thumb-no {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.pdf-thumb-active .pdf-thumb-no {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.pdf-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 0 24px;
+}
+
+/* One row: one page in single-page mode, two side by side in two-page mode */
+.pdf-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.pdf-row:last-child {
+  margin-bottom: 16px;
+}
+
+/* Night reading: invert only the page bitmap; overlays (markup/form/drawing) are separate in the DOM */
+.pdf-night .pdf-page-content canvas {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.pdf-night {
+  background: #1e1e1e;
+}
+
+.pdf-night .pdf-page {
+  box-shadow: 0 1px 4px rgb(0 0 0 / 55%);
+}
+
+.pdf-sign-drop {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  cursor: crosshair;
+  background: rgb(60 120 216 / 6%);
+}
+
+.pdf-page {
+  /* pdf.js setLayerDimensions uses these vars to give textLayer its unrotated size */
+  --user-unit: 1;
+  --total-scale-factor: calc(var(--scale-factor) * var(--user-unit));
+  --scale-round-x: 1px;
+  --scale-round-y: 1px;
+
+  position: relative;
+  flex-shrink: 0;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 18%);
+}
+
+.pdf-page-content {
+  position: absolute;
+  inset: 0;
+}
+
+.pdf-page-content canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* ── Outline sidebar ── */
+
+.pdf-outline-pane {
+  padding: 8px 4px;
+}
+
+.pdf-outline {
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-outline-item {
+  display: block;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  padding: 5px 8px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text);
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-outline-item:hover {
+  background: var(--hover);
+}
+
+/* ── Encrypted document password ── */
+
+.pdf-password {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.pdf-password-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pdf-password-input {
+  width: 220px;
+  height: 30px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pdf-password-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pdf-password-error {
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.pdf-password-btn {
+  height: 30px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 5px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pdf-password-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tb-readonly {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+/* ── Generic small dialogs (extract range etc.) ── */
+
+.pdf-modal-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: rgb(0 0 0 / 18%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.pdf-modal {
+  margin-top: 96px;
+  min-width: 300px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 22%);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pdf-modal-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pdf-modal-input {
+  height: 28px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pdf-modal-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pdf-modal-input.invalid {
+  border-color: #c0392b;
+}
+
+.pdf-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pdf-modal-btn {
+  height: 27px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.pdf-modal-btn:hover {
+  background: var(--hover);
+}
+
+.pdf-modal-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ── Full-text search ── */
+
+.pdf-search-bar {
+  position: absolute;
+  top: 8px;
+  right: 20px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
+}
+
+.pdf-search-input {
+  width: 180px;
+  height: 26px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pdf-search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pdf-search-count {
+  min-width: 52px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.pdf-search-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.pdf-search-hit {
+  position: absolute;
+  background: rgb(255 214 0 / 35%);
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+}
+
+.pdf-search-hit-cur {
+  background: rgb(255 150 50 / 55%);
+  outline: 1.5px solid #f08c00;
+}
+
+/* ── Drawing annotation layer ── */
+
+.pdf-draw-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* With a tool active, take over the pointer and disable text selection so dragging doesn't select text */
+.pdf-draw-active {
+  pointer-events: auto;
+  cursor: crosshair;
+}
+
+.pdf-scroll.pdf-drawing .textLayer {
+  user-select: none;
+  pointer-events: none;
+}
+
+.pdf-draw-shape {
+  cursor: pointer;
+}
+
+.pdf-draw-shape:hover {
+  opacity: 0.65;
+}
+
+.pdf-note-pin {
+  position: absolute;
+  z-index: 5;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px 4px 4px 0;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 30%);
+  cursor: pointer;
+  padding: 0;
+}
+
+.pdf-note-pin:hover {
+  opacity: 0.75;
+}
+
+/* ── Stamp (watermark/header-footer) preview and config ── */
+
+.pdf-stamp-preview {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.pdf-stamp-preview:hover {
+  outline: 1px dashed rgb(0 0 0 / 35%);
+}
+
+.pdf-modal-wide {
+  min-width: 440px;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.pdf-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.pdf-field > span:first-child {
+  flex-shrink: 0;
+  min-width: 74px;
+  color: var(--text-dim);
+}
+
+.pdf-field .pdf-modal-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf-field input[type='range'] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+.pdf-field em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  min-width: 40px;
+  text-align: right;
+}
+
+.pdf-input-sm {
+  max-width: 84px;
+}
+
+.pdf-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.pdf-field-grid .pdf-field > span:first-child {
+  min-width: 56px;
+}
+
+.pdf-wm-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 26px;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+/* ── Read-only document properties area ── */
+
+.pdf-prop-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  background: rgb(0 0 0 / 3%);
+  border-radius: 6px;
+}
+
+.pdf-prop-row {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.pdf-prop-row > span {
+  min-width: 74px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.pdf-prop-row > em {
+  font-style: normal;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Thumbnail drag-to-reorder ── */
+
+.pdf-thumb[draggable='true'] {
+  cursor: grab;
+}
+
+.pdf-thumb-dropbefore {
+  position: relative;
+}
+
+.pdf-thumb-dropbefore::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: -5px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* ── Signature dialog ── */
+
+.pdf-sign-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.pdf-sign-tab {
+  height: 26px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.pdf-sign-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.pdf-sign-pad {
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
+  background: #fff;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.pdf-sign-preview {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-family: 'Snell Roundhand', 'Segoe Script', cursive;
+  font-style: italic;
+  font-size: 34px;
+  overflow: hidden;
+}
+
+.pdf-sign-hint {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* ── Drawing colors ── */
+
+.pdf-color-col {
+  justify-content: center;
+  gap: 4px;
+}
+
+.pdf-color-row {
+  display: flex;
+  gap: 4px;
+}
+
+.pdf-color-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 18%) inset;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pdf-color-dot.active {
+  border-color: var(--text);
+}
+
+.pdf-color-dot:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pdf-color-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.pdf-modal-textarea {
+  min-width: 300px;
+  min-height: 90px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 7px 9px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.5;
+  background: var(--surface);
+  color: var(--text);
+  resize: vertical;
+}
+
+.pdf-modal-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ── Link annotation hit areas ── */
+
+.pdf-link-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.pdf-link {
+  position: absolute;
+  border-radius: 2px;
+}
+
+.pdf-link:hover {
+  background: rgb(60 120 216 / 12%);
+  box-shadow: 0 0 0 1px rgb(60 120 216 / 35%);
+}
+
+/* ── AI tool rows (unified with docs/slides/sheets) ── */
+
+/* Collapsible tool-activity group.
+   Unlike docs/slides, this app renders the group BEFORE the reply text, so the
+   gap to the surrounding content comes from margin-bottom, not margin-top. */
+.ai-work-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.ai-msg-assistant .ai-work-group:last-child,
+.ai-work-group:only-child {
+  margin-bottom: 0;
+}
+
+.ai-work-group-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #909499;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-work-group-summary:hover {
+  color: #606366;
+}
+
+.ai-work-group-summary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(35, 36, 37, 0.2);
+  border-radius: 4px;
+}
+
+.ai-work-group-summary.running {
+  color: #606366;
+}
+
+.ai-work-group-summary.running .ai-work-group-label {
+  animation: ai-summary-pulse 1500ms linear infinite;
+}
+
+@keyframes ai-summary-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.ai-work-group-body {
+  align-self: stretch;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-work-group-body.open {
+  grid-template-rows: 1fr;
+}
+
+.ai-work-group-body-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding: 0 0 0 8px;
+  transition: padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-work-group-body.open .ai-work-group-body-inner {
+  padding: 4px 0 8px 8px;
+}
+
+/* Step rows inside the group: 20px icon slot + 1px connector */
+.ai-step-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  color: #909499;
+  animation: ai-row-ease-in 320ms ease-out;
+}
+
+.ai-step-row:not(:last-child) {
+  padding-bottom: 16px;
+}
+
+.ai-step-row:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 9.5px;
+  top: 32px;
+  bottom: -4px;
+  width: 1px;
+  background: #eaeaea;
+}
+
+.ai-step-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #909499;
+}
+
+.ai-step-icon.done {
+  color: #606366;
+}
+
+.ai-step-icon.error {
+  color: #b91c1c;
+}
+
+.ai-step-icon.running svg {
+  animation: ai-hourglass-flip 1.8s ease-in-out infinite;
+}
+
+@keyframes ai-hourglass-flip {
+  0%,
+  12% {
+    transform: rotate(0);
+  }
+  44%,
+  56% {
+    transform: rotate(180deg);
+  }
+  88%,
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-step-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 1px;
+}
+
+.ai-step-title {
+  font-size: 14px;
+  line-height: 1.3;
+  color: #606366;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+.ai-step-title.clickable {
+  cursor: pointer;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-step-title.clickable:hover {
+  color: #232425;
+}
+
+.ai-step-title.clickable:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(35, 36, 37, 0.2);
+  border-radius: 4px;
+}
+
+/* Step detail opens instantly, no animation */
+.ai-step-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-step-row,
+  .ai-step-icon.running svg,
+  .ai-work-group-summary.running .ai-work-group-label {
+    animation: none;
+  }
+}
+
+/* Running tool row: two grow/shrink brand dots */
+.ai-tool-chip-spinner {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
+}
+
+.ai-tool-chip-spinner::before,
+.ai-tool-chip-spinner::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #0f7fff;
+}
+
+.ai-tool-chip-spinner::before {
+  animation: ai-tool-dot-grow 2s infinite;
+}
+
+.ai-tool-chip-spinner::after {
+  animation: ai-tool-dot-shrink 2s infinite;
+}
+
+@keyframes ai-tool-dot-grow {
+  0%,
+  100% {
+    transform: scale(0.333);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes ai-tool-dot-shrink {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.333);
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-tool-chip-spinner::before,
+  .ai-tool-chip-spinner::after {
+    animation: none;
+    opacity: 0.65;
+  }
+}
+
+/* caret: text glyph right after the label, always visible, rotates open */
+.ai-tool-chip-caret {
+  margin-left: 4px;
+  opacity: 0.7;
+  display: inline-block;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-tool-chip-caret.open {
+  transform: rotate(90deg);
+}
+
+/* stream rows ease in */
+@keyframes ai-row-ease-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* expanded step detail: subtle gray card, no border */
+.ai-tool-output {
+  background: #f5f5f5;
+  border: none;
+  border-radius: 12px;
+  font-family:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 14px;
+  color: #232425;
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ai-tool-output-pre {
+  padding: 12px 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* ── Print container: hidden on screen, the only thing shown when printing ── */
+
+.pdf-print-root {
+  display: none;
+}
+
+@media print {
+  .app {
+    display: none !important;
+  }
+
+  .pdf-print-root {
+    display: block;
+  }
+
+  .pdf-print-root img {
+    display: block;
+    width: 100%;
+    page-break-after: always;
+  }
+}
+
+/* ── AI sidebar (aligned with docs/sheets panel language) ── */
+
+/* dock wrapper: its width animates between the panel and the 34px collapsed rail
+ * (docs-parity 180ms ease); the panel inside keeps its natural width and is clipped */
+.ai-dock {
+  display: flex;
+  flex-shrink: 0;
+  min-height: 0;
+  width: var(--ai-panel-width, 540px);
+  overflow: hidden;
+  transition: width 180ms ease;
+}
+
+.ai-dock.collapsed {
+  width: 34px;
+}
+
+/* while dragging the resizer, follow the pointer without easing */
+.ai-dock:has(.ai-panel-resizing) {
+  transition: none;
+}
+
+/* the panel stays mounted (chat history survives) but hidden while collapsed */
+.ai-dock.collapsed .copilot {
+  display: none;
+}
+
+/* the rail stretches to fill the dock while the width animates */
+.ai-dock .ai-rail {
+  flex: 1;
+  width: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-dock {
+    transition: none;
+  }
+}
+
+/* collapsed AI sidebar: thin rail on the left edge (same as docs) */
+.ai-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 34px;
+  padding: 12px 2px;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ai-rail:hover {
+  background: var(--hover);
+}
+
+.copilot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 540px;
+  flex-shrink: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--gs-font-sans);
+  color: var(--color-text-primary);
+}
+
+/* drag handle on the panel's right edge — resize the panel horizontally */
+.ai-panel-resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  z-index: 20;
+  background: transparent;
+}
+
+/* while dragging: keep the col-resize cursor everywhere, no text selection */
+.ai-panel-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Design tokens — AI panel chrome only (same values as docs/sheets/slides).
+ * The viewer chrome around the panel keeps its own variables. */
+:root {
+  --gs-font-sans:
+    'Arial', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    sans-serif;
+  --color-text-primary: #232425;
+  --color-text-secondary: #606366;
+  --color-text-tertiary: #909499;
+  --color-bg-page: #ffffff;
+  --color-bg-subtle: #f5f5f5;
+  --color-border-default: #eaeaea;
+  --color-border-strong: #d0d3d8;
+  --radius-16: 16px;
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --text-body-lg: 18px;
+  --text-small: 14px;
+  --text-caption: 12px;
+}
+
+.ai-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.ai-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+/* Genspark brand logo (shared by the collapsed entry and the AI panel title) */
+.genspark-badge {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.ai-panel-title .genspark-badge {
+  width: 18px;
+  height: 18px;
+}
+
+.ai-panel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ai-header-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  color: var(--text-dim);
+  padding: 0;
+  cursor: pointer;
+}
+
+.ai-header-btn:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.ai-chat {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  /* uniform 16px flex gap between blocks, messages carry no margin */
+  gap: 16px;
+  overflow-y: auto;
+  padding: 32px 16px;
+  font-family:
+    'Arial',
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    sans-serif;
+}
+
+/* Boundary between the restored transcript and the live turn */
+.ai-history-sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  font-size: 14px;
+  color: #999;
+}
+
+.ai-chat-empty {
+  margin-top: 36px;
+  padding: 0 10px;
+  text-align: center;
+  font-family: var(--gs-font-sans);
+}
+
+.ai-chat-empty-title {
+  font-size: var(--text-body-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.ai-chat-empty-body {
+  color: var(--color-text-secondary);
+  font-size: var(--text-small);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Starter pills: same metrics as the slides .ai-starter list (stacked, centered) */
+.ai-quick-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.ai-quick-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-default);
+  background: var(--color-bg-page);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ai-quick-btn:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-bg-subtle);
+}
+
+.ai-quick-btn:active {
+  filter: brightness(0.88);
+}
+
+/* Chat messages (scaled to the 14px panel): user = gray pill, AI = plain text without a bubble, no accent colors */
+.ai-msg {
+  position: relative;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* User pill: gray, fully rounded (no tail) */
+.ai-msg-user {
+  align-self: flex-end;
+  color: #232425;
+  background: #f5f5f5;
+  padding: 8px 16px;
+  border-radius: 14px;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+.ai-msg-assistant {
+  align-self: stretch;
+  border: none;
+  background: none;
+  padding: 0;
+  max-width: 100%;
+  color: #232425;
+  white-space: normal;
+}
+
+.ai-msg-error {
+  border-color: rgb(192 57 43 / 45%);
+  color: #c0392b;
+}
+
+.ai-md p,
+.ai-md ul,
+.ai-md ol {
+  margin: 0 0 16px;
+}
+
+.ai-md :last-child {
+  margin-bottom: 0;
+}
+
+/* blank markdown paragraphs would each eat a 16px margin — the stream never renders them */
+.ai-md p:empty {
+  display: none;
+}
+
+.ai-md .ai-md-h {
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 20px 0 8px;
+}
+
+.ai-md .ai-md-h:first-child {
+  margin-top: 0;
+}
+
+.ai-md ul,
+.ai-md ol {
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.ai-md li {
+  margin-left: 20px;
+  line-height: 28px;
+}
+
+/* inline code: neutral gray chip (deliberately not red), 2px below body size */
+.ai-md code {
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: #f5f5f5;
+  color: #606366;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 14px;
+} /* Thinking indicator: shimmer label above two grow/shrink dots */
+.ai-typing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.ai-typing-label {
+  display: inline-block;
+  position: relative;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: #666;
+  -webkit-text-fill-color: transparent;
+  background: #666 -webkit-gradient(
+      linear,
+      100% 0,
+      0 0,
+      from(#666),
+      color-stop(0.5, #d9d9d9),
+      to(#666)
+    );
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-repeat: no-repeat;
+  background-size: 70% 100%;
+  animation: ai-thinking-shimmer 1.2s infinite alternate linear;
+}
+
+.ai-typing-elapsed {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes ai-thinking-shimmer {
+  0% {
+    background-position: -100% top;
+  }
+  100% {
+    background-position: 250% top;
+  }
+}
+
+.ai-typing-dots {
+  height: 12px;
+  display: flex;
+  gap: 2px;
+}
+
+.ai-typing-dot-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 12px;
+}
+
+.ai-typing-dot-grow,
+.ai-typing-dot-shrink {
+  background: #0f7fff;
+  border-radius: 50%;
+}
+
+.ai-typing-dot-grow {
+  animation: ai-dot-grow 2s infinite;
+}
+
+.ai-typing-dot-shrink {
+  animation: ai-dot-shrink 2s infinite;
+}
+
+@keyframes ai-dot-grow {
+  0%,
+  100% {
+    width: 4px;
+    height: 4px;
+    opacity: 0.45;
+  }
+  50% {
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+  }
+}
+
+@keyframes ai-dot-shrink {
+  0%,
+  100% {
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+  }
+  50% {
+    width: 4px;
+    height: 4px;
+    opacity: 0.45;
+  }
+}
+
+/* streaming caret at the tail of streaming assistant text */
+.ai-msg-streaming .ai-md > :last-child::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 1em;
+  margin-left: 2px;
+  border-radius: 1px;
+  background: #606366;
+  vertical-align: text-bottom;
+  animation: ai-caret-blink 900ms steps(1, end) infinite;
+}
+
+@keyframes ai-caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-typing-label,
+  .ai-msg-streaming .ai-md > :last-child::after {
+    animation: none;
+  }
+}
+
+/* Composer floats over the chat scroll area — no top border (agent-shell §4.6) */
+.ai-composer {
+  border-top: none;
+  padding: 8px 12px 12px;
+  background: var(--color-bg-page);
+  font-family: var(--gs-font-sans);
+}
+
+/* composer card — 16px radius, default border, production float shadow */
+.ai-input-box {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-16);
+  background: var(--color-bg-page);
+  box-shadow: 0 6px 30px rgb(0 0 0 / 8%);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* textarea: 15px / 21px fixed line-height, auto-grow band
+ * (resting height matches the other AI panels, 25% taller than default) */
+.ai-input-box textarea {
+  display: block;
+  width: 100%;
+  resize: none;
+  border: none;
+  background: none;
+  border-radius: var(--radius-16) var(--radius-16) 0 0;
+  padding: 12px 14px 4px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  line-height: 21px;
+  outline: none;
+  color: var(--color-text-primary);
+  min-height: 64px;
+  max-height: 147px;
+  overflow-y: auto;
+}
+
+.ai-input-box textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.ai-input-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 8px 10px;
+}
+
+.ai-input-footer .model-picker {
+  min-width: 0;
+  max-width: 190px;
+}
+
+.ai-input-footer .model-picker__trigger {
+  max-width: 190px;
+  height: 28px;
+  padding: 0 7px;
+}
+
+.ai-input-footer .model-picker__trigger-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-input-footer .model-picker__popover {
+  width: min(340px, calc(100vw - 36px));
+}
+
+.ai-model-notice,
+.ai-model-capability-note {
+  margin: 0 2px 7px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.ai-model-notice {
+  color: var(--color-status-warning, #8a5a00);
+}
+
+.ai-model-retry-suggestion {
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.ai-route-blocked .ai-send-btn:not(.ai-stop-btn) {
+  pointer-events: none;
+  opacity: 0.42;
+}
+
+.ai-model-switch-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 4px;
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.ai-model-switch-divider::before,
+.ai-model-switch-divider::after {
+  height: 1px;
+  flex: 1;
+  background: var(--color-border-subtle, #eceef0);
+  content: '';
+}
+
+.ai-input-hint {
+  font-size: var(--text-caption);
+  color: var(--color-text-tertiary);
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* icon-only enter key: transparent button chrome, visuals come from brand-supplied PNGs
+ * (gray arrow = disabled, black arrow = enabled), 36×36, same as the other AI panels */
+.ai-send-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin-left: auto;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 35%;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ai-send-btn img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ai-send-btn:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.ai-send-btn:active:not(:disabled) {
+  filter: brightness(0.88);
+  transform: scale(0.98);
+}
+
+.ai-send-btn:disabled {
+  cursor: default;
+}
+
+/* Stop button while generating: brand-supplied art (white square on black), transparent button chrome */
+.ai-send-btn.ai-stop-btn {
+  background: transparent;
+}
+
+.ai-send-btn.ai-stop-btn:hover {
+  filter: brightness(0.92);
+}
+
+/* ── pdfjs text layer (select/copy); structure requirements per pdfjs TextLayer ── */
+
+/* Matches pdf.js's official text_layer.css: spans laid out in unrotated page space,
+   whole layer rotated via data-main-rotation; font size/scale driven by --font-height/--scale-x vars */
+.textLayer {
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  line-height: 1;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+}
+
+.textLayer[data-main-rotation='90'] {
+  transform: rotate(90deg) translateY(-100%);
+}
+
+.textLayer[data-main-rotation='180'] {
+  transform: rotate(180deg) translate(-100%, -100%);
+}
+
+.textLayer[data-main-rotation='270'] {
+  transform: rotate(270deg) translateX(-100%);
+}
+
+.textLayer span,
+.textLayer br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+  z-index: 1;
+  --font-height: 0;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  --scale-x: 1;
+  --rotate: 0deg;
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.textLayer .markedContent {
+  display: contents;
+}
+
+.textLayer span::selection {
+  background: rgba(56, 108, 255, 0.32);
+}
+
+/* pdfjs uses endOfContent to carry cross-page selection */
+.textLayer .endOfContent {
+  display: block;
+  position: absolute;
+  inset: 100% 0 0;
+  z-index: -1;
+  cursor: default;
+  user-select: none;
+}

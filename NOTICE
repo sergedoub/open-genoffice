@@ -1,0 +1,19 @@
+Open GenOffice
+Copyright 2026 Mainfunc, Inc.
+Modifications Copyright 2026 Serge Doub and Open GenOffice contributors
+
+This independent fork includes software developed at Mainfunc, Inc. The
+upstream project is https://github.com/genspark-ai/genoffice. The principal
+fork modifications add provider choice, local credential protection,
+per-document model routing, derivative packaging identity, and related UI and
+reliability work. See MODIFICATIONS.md for more detail.
+
+Bundled third-party components are listed in THIRD-PARTY-NOTICES.txt, which
+tools/gen-third-party-notices.mjs generates at packaging time. It is not
+checked into this repository; in a release build it ships inside the
+application bundle (Contents/Resources on macOS, resources/ on Windows).
+Run `node tools/gen-third-party-notices.mjs` to produce it from a source
+checkout.
+
+Bundled fonts and their licenses are documented in
+apps/docs/src/renderer/fonts/README.md.
