@@ -1,0 +1,73 @@
+name: Windows release artifact
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable branch, 2026-07
+        with:
+          toolchain: 1.97.1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check dependency licenses
+        run: npm run licenses
+
+      - name: Build Windows installer
+        run: npm run dist:win
+
+      - name: Install and launch packaged application
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $installer = Get-ChildItem 'apps/shell/release/OpenGenOfficeSetup-v*-x64.exe' | Select-Object -First 1
+          if (-not $installer) { throw 'Windows installer was not produced' }
+
+          $installDir = Join-Path $env:RUNNER_TEMP 'OpenGenOffice'
+          $install = Start-Process -FilePath $installer.FullName -ArgumentList '/S', "/D=$installDir" -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw "Installer exited with $($install.ExitCode)" }
+
+          $app = Join-Path $installDir 'Open GenOffice.exe'
+          if (-not (Test-Path $app)) { throw "Installed application missing at $app" }
+
+          $process = Start-Process -FilePath $app -ArgumentList '--disable-gpu' -PassThru
+          Start-Sleep -Seconds 15
+          if ($process.HasExited) { throw "Packaged application exited early with $($process.ExitCode)" }
+          Stop-Process -Id $process.Id -Force
+
+      - name: Generate checksum
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem 'apps/shell/release/OpenGenOfficeSetup-v*-x64.exe' | Select-Object -First 1
+          $hash = (Get-FileHash -Algorithm SHA256 $installer.FullName).Hash.ToLowerInvariant()
+          "$hash  $($installer.Name)" | Set-Content -Encoding ascii "$($installer.FullName).sha256"
+
+      - name: Upload Windows release artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: open-genoffice-windows-x64
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            apps/shell/release/OpenGenOfficeSetup-v*-x64.exe
+            apps/shell/release/OpenGenOfficeSetup-v*-x64.exe.sha256

@@ -109,6 +109,7 @@ const config = {
   npmRebuild: false,
   mac: {
     target: ['dmg', 'zip'],
+    artifactName: 'OpenGenOffice-${version}-${arch}.${ext}',
     category: 'public.app-category.productivity',
     hardenedRuntime: true,
     gatekeeperAssess: false,
@@ -124,6 +125,7 @@ const config = {
     ],
   },
   win: {
+    artifactName: 'OpenGenOfficeSetup-v${version}-${arch}.${ext}',
     target: [
       {
         target: 'nsis',
@@ -132,7 +134,9 @@ const config = {
     ],
     extraResources: [
       {
-        from: '../sheets/native/xlsx-engine/target/x86_64-pc-windows-gnu/release/xlsx-sidecar.exe',
+        // `native:build` uses the Windows runner's default MSVC target and
+        // statically links the CRT (see xlsx-engine/.cargo/config.toml).
+        from: '../sheets/native/xlsx-engine/target/release/xlsx-sidecar.exe',
         to: 'native/xlsx-sidecar.exe',
       },
     ],
