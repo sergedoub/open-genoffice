@@ -14,6 +14,18 @@ An AI-native office suite for macOS and Windows: word processor, spreadsheet,
 presentations, and PDF — five Electron apps sharing one engine layer, built
 around AI editing as a first-class workflow rather than a bolted-on chat box.
 
+## Download
+
+Installable builds are published on the
+[GitHub Releases page](https://github.com/sergedoub/open-genoffice/releases):
+
+- macOS Apple silicon: signed and notarized DMG or ZIP
+- Windows x64: NSIS installer
+
+Intel Macs are not currently supported. Release assets include SHA-256
+checksums. Developers can build the same source locally using the commands
+below.
+
 ## What this fork changes
 
 - Keeps Genspark as a built-in provider and migration default.

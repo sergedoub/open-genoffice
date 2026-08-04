@@ -318,6 +318,18 @@ describe('Open GenOffice builder configuration', () => {
     expect(config.fileAssociations).toBeUndefined()
     expect(config.publish).toBeUndefined()
     expect(config.mac).toMatchObject({ identity: null, notarize: false })
+    expect(config.mac).toMatchObject({
+      artifactName: 'OpenGenOffice-${version}-${arch}.${ext}',
+    })
+    expect(config.win).toMatchObject({
+      artifactName: 'OpenGenOfficeSetup-v${version}-${arch}.${ext}',
+      extraResources: [
+        {
+          from: '../sheets/native/xlsx-engine/target/release/xlsx-sidecar.exe',
+          to: 'native/xlsx-sidecar.exe',
+        },
+      ],
+    })
     expect(config.dmg).toMatchObject({ sign: false })
     expect(config.afterSign).toBe('build/adhoc-sign.js')
   })

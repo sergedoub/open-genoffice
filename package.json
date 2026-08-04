@@ -1,6 +1,6 @@
 {
   "name": "open-genoffice",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Independent multi-provider fork of the GenOffice AI-native office suite",
   "author": "Serge Doub and Open GenOffice contributors",
