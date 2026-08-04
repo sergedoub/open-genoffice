@@ -6,25 +6,18 @@
 > [GenOffice](https://github.com/genspark-ai/genoffice) that keeps Genspark
 > available while adding first-class bring-your-own-provider support.
 
-Open GenOffice is not affiliated with or endorsed by Mainfunc, Genspark,
-Apache OpenOffice, or Microsoft. GenOffice and Genspark are trademarks of
-Mainfunc, Inc.; other names belong to their respective owners.
-
 An AI-native office suite for macOS and Windows: word processor, spreadsheet,
 presentations, and PDF — five Electron apps sharing one engine layer, built
 around AI editing as a first-class workflow rather than a bolted-on chat box.
 
 ## Download
 
-Installable builds are published on the
-[GitHub Releases page](https://github.com/sergedoub/open-genoffice/releases):
+Signed installers built from `main`:
 
-- macOS Apple silicon: signed and notarized DMG or ZIP
-- Windows x64: NSIS installer
+- **macOS** (Apple Silicon): [OpenGenOffice-0.4.0-arm64.dmg](https://github.com/sergedoub/open-genoffice/releases/download/v0.4.0/OpenGenOffice-0.4.0-arm64.dmg)
+- **Windows** (x64): [OpenGenOfficeSetup-v0.4.0-x64.exe](https://github.com/sergedoub/open-genoffice/releases/download/v0.4.0/OpenGenOfficeSetup-v0.4.0-x64.exe)
 
-Intel Macs are not currently supported. Release assets include SHA-256
-checksums. Developers can build the same source locally using the commands
-below.
+Other versions are on the [Releases](https://github.com/sergedoub/open-genoffice/releases) page.
 
 ## What this fork changes
 
@@ -41,12 +34,20 @@ See [MODIFICATIONS.md](MODIFICATIONS.md) for the derivative change record and
 [docs/upstream-provenance.md](docs/upstream-provenance.md) for ancestry and
 upstream maintenance.
 
+### Screenshot
+
+![Open GenOffice Docs with the OpenRouter model selector open](assets/open-genoffice-model-selector.jpeg)
+
 ## Upstream and acknowledgments
 
 This project exists because Mainfunc released GenOffice under Apache-2.0. We
 appreciate the substantial editor, file-format, rendering, and application work
 they made available. See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for full
 credit and links to the upstream project.
+
+Open GenOffice is not affiliated with or endorsed by Mainfunc, Genspark,
+Apache OpenOffice, or Microsoft. GenOffice and Genspark are trademarks of
+Mainfunc, Inc.; other names belong to their respective owners.
 
 ## Apps
 
